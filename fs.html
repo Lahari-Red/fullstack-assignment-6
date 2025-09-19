@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust Travels - Book Your Dream Vacation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            background: #2c3e50;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            color: #3498db;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #3498db;
+            color: white;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+        }
+
+        section {
+            padding: 4rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        h1, h2 {
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Hero Section */
+        #hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 6rem 2rem;
+        }
+
+        #hero h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        #hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: #e74c3c;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Packages Table */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 1.1rem;
+        }
+
+        .season-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .season-peak { background: #e74c3c; }
+        .season-high { background: #f39c12; }
+        .season-low { background: #27ae60; }
+
+        /* Gallery */
+        .gallery-controls {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .layout-toggle {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .layout-toggle.active {
+            background: #2980b9;
+        }
+
+        .gallery {
+            display: grid;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .gallery.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .gallery.grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .gallery.grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+        .gallery-item {
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .gallery-item-info {
+            padding: 1rem;
+            background: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal-info {
+            background: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Booking Form */
+        .booking-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ecf0f1;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .error {
+            border-color: #e74c3c !important;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .price-estimator {
+            background: #3498db;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+
+        .price-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 5px;
+        }
+
+        .submit-btn {
+            background: #27ae60;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            #hero h1 {
+                font-size: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .price-breakdown {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Wanderlust Travels</div>
+            <ul class="nav-links">
+                <li><a href="#hero" class="nav-link">Home</a></li>
+                <li><a href="#packages" class="nav-link">Packages</a></li>
+                <li><a href="#gallery" class="nav-link">Gallery</a></li>
+                <li><a href="#booking" class="nav-link">Book Now</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero">
+            <h1>Discover Your Next Adventure</h1>
+            <p>Explore breathtaking destinations with our curated travel packages</p>
+            <a href="#booking" class="cta-button">Start Your Journey</a>
+        </section>
+
+        <!-- Packages Section -->
+        <section id="packages">
+            <h2>Travel Packages</h2>
+            <div class="table-container">
+                <table id="packages-table">
+                    <thead>
+                        <tr>
+                            <th>Destination</th>
+                            <th>Duration</th>
+                            <th>Base Price</th>
+                            <th>Season</th>
+                            <th>Final Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Packages will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery">
+            <h2>Destination Gallery</h2>
+            <div class="gallery-controls">
+                <button class="layout-toggle active" data-layout="grid-2">2 Columns</button>
+                <button class="layout-toggle" data-layout="grid-3">3 Columns</button>
+                <button class="layout-toggle" data-layout="grid-4">4 Columns</button>
+            </div>
+            <div class="gallery grid-2" id="gallery-container">
+                <!-- Gallery items will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Booking Section -->
+        <section id="booking">
+            <h2>Book Your Trip</h2>
+            <form class="booking-form" id="booking-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="package-select">Select Package:</label>
+                        <select id="package-select" name="package" required>
+                            <option value="">Choose a package...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guests">Number of Guests:</label>
+                        <input type="number" id="guests" name="guests" min="1" max="10" value="2" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkin">Check-in Date:</label>
+                        <input type="date" id="checkin" name="checkin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="checkout">Check-out Date:</label>
+                        <input type="date" id="checkout" name="checkout" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="promo-code">Promo Code (Optional):</label>
+                        <input type="text" id="promo-code" name="promoCode" placeholder="Enter promo code">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <!-- Price Estimator -->
+                <div class="price-estimator" id="price-estimator">
+                    <h3>Price Breakdown</h3>
+                    <div class="price-breakdown">
+                        <div>
+                            <strong>Base Price:</strong> <span id="base-price">$0</span><br>
+                            <strong>Nights:</strong> <span id="nights-count">0</span><br>
+                            <strong>Guests:</strong> <span id="guests-count">2</span>
+                        </div>
+                        <div>
+                            <strong>Guest Multiplier:</strong> <span id="guest-multiplier">+0%</span><br>
+                            <strong>Promo Discount:</strong> <span id="promo-discount">-0%</span><br>
+                            <strong>Season Multiplier:</strong> <span id="season-multiplier">+0%</span>
+                        </div>
+                    </div>
+                    <div class="total-price">
+                        Total: $<span id="total-price">0</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn" disabled>
+                    Complete Booking
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Modal for Gallery -->
+    <div class="modal" id="gallery-modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <img id="modal-image" src="" alt="">
+            <div class="modal-info">
+                <h3 id="modal-title"></h3>
+                <p id="modal-description"></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Wanderlust Travels. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Package data array
+        const packages = [
+            {
+                id: 1,
+                destination: "Santorini, Greece",
+                durationDays: 7,
+                basePrice: 1299,
+                season: "peak",
+                description: "Stunning sunsets and white-washed buildings"
+            },
+            {
+                id: 2,
+                destination: "Tokyo, Japan",
+                durationDays: 10,
+                basePrice: 1899,
+                season: "high",
+                description: "Modern culture meets ancient traditions"
+            },
+            {
+                id: 3,
+                destination: "Bali, Indonesia",
+                durationDays: 8,
+                basePrice: 999,
+                season: "low",
+                description: "Tropical paradise with rich culture"
+            },
+            {
+                id: 4,
+                destination: "Paris, France",
+                durationDays: 6,
+                basePrice: 1599,
+                season: "peak",
+                description: "The city of love and lights"
+            },
+            {
+                id: 5,
+                destination: "Iceland Adventure",
+                durationDays: 9,
+                basePrice: 2199,
+                season: "high",
+                description: "Northern lights and natural wonders"
+            },
+            {
+                id: 6,
+                destination: "Maldives Retreat",
+                durationDays: 5,
+                basePrice: 2999,
+                season: "peak",
+                description: "Luxury overwater bungalows"
+            }
+        ];
+
+        // Gallery data array
+        const galleryItems = [
+            {
+                thumbnail: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=400",
+                large: "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=1200",
+                title: "Santorini Sunset",
+                description: "Breathtaking sunset views over the Aegean Sea"
+            },
+            {
+                thumbnail: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400",
+                large: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200",
+                title: "Tokyo Skyline",
+                description: "Modern architecture and city lights"
+            },
+            {
+                thumbnail: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400",
+                large: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=1200",
+                title: "Bali Rice Terraces",
+                description: "Stunning terraced landscapes of Bali"
+            },
+            {
+                thumbnail: "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400",
+                large: "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=1200",
+                title: "Eiffel Tower",
+                description: "Iconic landmark of Paris"
+            },
+            {
+                thumbnail: "https://images.unsplash.com/photo-1531168556467-80aace4d0144?w=400",
+                large: "https://images.unsplash.com/photo-1531168556467-80aace4d0144?w=1200",
+                title: "Northern Lights Iceland",
+                description: "Aurora borealis dancing across the sky"
+            },
+            {
+                thumbnail: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400",
+                large: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200",
+                title: "Maldives Paradise",
+                description: "Crystal clear waters and pristine beaches"
+            }
+        ];
+
+        // Variables for form validation and pricing
+        let currentPackage = null;
+        let currentTotal = 0;
+        let validationErrors = {};
+
+        // DOM Elements
+        const packagesTable = document.getElementById('packages-table').getElementsByTagName('tbody')[0];
+        const packageSelect = document.getElementById('package-select');
+        const galleryContainer = document.getElementById('gallery-container');
+        const modal = document.getElementById('gallery-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDescription = document.getElementById('modal-description');
+        const modalClose = document.getElementById('modal-close');
+        const bookingForm = document.getElementById('booking-form');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Initialize the application
+        function init() {
+            renderPackagesTable();
+            populatePackageSelect();
+            renderGallery();
+            setupEventListeners();
+            setupNavigation();
+        }
+
+        // Function to calculate final price with seasonal multiplier
+        function calculateFinalPrice(basePrice, season) {
+            let multiplier = 1;
+            
+            switch(season) {
+                case 'peak':
+                    multiplier = 1.5;
+                    break;
+                case 'high':
+                    multiplier = 1.25;
+                    break;
+                case 'low':
+                    multiplier = 0.85;
+                    break;
+                default:
+                    multiplier = 1;
+            }
+
+            // Add weekend surcharge (random for demo)
+            const isWeekend = Math.random() > 0.7;
+            if (isWeekend) {
+                multiplier += 0.1;
+            }
+
+            return Math.round(basePrice * multiplier);
+        }
+
+        // Function to render packages table using loops
+        function renderPackagesTable() {
+            packagesTable.innerHTML = '';
+            
+            packages.forEach(pkg => {
+                const row = packagesTable.insertRow();
+                const finalPrice = calculateFinalPrice(pkg.basePrice, pkg.season);
+                
+                row.innerHTML = `
+                    <td>${pkg.destination}</td>
+                    <td>${pkg.durationDays} days</td>
+                    <td>$${pkg.basePrice}</td>
+                    <td><span class="season-badge season-${pkg.season}">${pkg.season.toUpperCase()}</span></td>
+                    <td class="price">$${finalPrice}</td>
+                `;
+            });
+        }
+
+        // Function to populate package select dropdown
+        function populatePackageSelect() {
+            packages.forEach(pkg => {
+                const option = document.createElement('option');
+                option.value = pkg.id;
+                option.textContent = `${pkg.destination} (${pkg.durationDays} days)`;
+                packageSelect.appendChild(option);
+            });
+        }
+
+        // Function to render gallery using loops
+        function renderGallery() {
+            galleryContainer.innerHTML = '';
+            
+            galleryItems.forEach((item, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.setAttribute('data-large', item.large);
+                galleryItem.setAttribute('data-title', item.title);
+                galleryItem.setAttribute('data-description', item.description);
+                
+                galleryItem.innerHTML = `
+                    <img src="${item.thumbnail}" alt="${item.title}" loading="lazy">
+                    <div class="gallery-item-info">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+                
+                galleryContainer.appendChild(galleryItem);
+            });
+        }
+
+        // Function to calculate booking price with control flow
+        function calculateBookingPrice() {
+            if (!currentPackage) return 0;
+
+            const guests = parseInt(document.getElementById('guests').value) || 2;
+            const checkin = new Date(document.getElementById('checkin').value);
+            const checkout = new Date(document.getElementById('checkout').value);
+            const promoCode = document.getElementById('promo-code').value.toUpperCase().trim();
+
+            // Calculate nights using Date math
+            const nights = Math.max(0, Math.ceil((checkout - checkin) / (1000 * 60 * 60 * 24)));
+            
+            if (nights <= 0) return 0;
+
+            // Base calculation
+            let total = currentPackage.basePrice * nights;
+
+            // Guest multiplier using operators and control flow
+            let guestMultiplier = 0;
+            if (guests > 2) {
+                guestMultiplier = (guests - 2) * 0.2; // 20% per additional guest
+            }
+
+            // Promo code discount using switch/case
+            let promoDiscount = 0;
+            switch(promoCode) {
+                case 'EARLYBIRD':
+                    promoDiscount = 0.1; // 10% off
+                    break;
+                case 'SUMMER20':
+                    promoDiscount = 0.2; // 20% off
+                    break;
+                case 'STUDENT':
+                    promoDiscount = 0.15; // 15% off
+                    break;
+                case 'FAMILY':
+                    if (guests >= 4) promoDiscount = 0.25; // 25% off for families
+                    break;
+                default:
+                    promoDiscount = 0;
+            }
+
+            // Season multiplier
+            let seasonMultiplier = 0;
+            switch(currentPackage.season) {
+                case 'peak':
+                    seasonMultiplier = 0.5;
+                    break;
+                case 'high':
+                    seasonMultiplier = 0.25;
+                    break;
+                case 'low':
+                    seasonMultiplier = -0.15;
+                    break;
+            }
+
+            // Apply multipliers and discounts
+            total = total * (1 + guestMultiplier + seasonMultiplier) * (1 - promoDiscount);
+
+            // Update UI elements
+            document.getElementById('base-price').textContent = `$${currentPackage.basePrice}`;
+            document.getElementById('nights-count').textContent = nights;
+            document.getElementById('guests-count').textContent = guests;
+            document.getElementById('guest-multiplier').textContent = `+${Math.round(guestMultiplier * 100)}%`;
+            document.getElementById('promo-discount').textContent = `-${Math.round(promoDiscount * 100)}%`;
+            document.getElementById('season-multiplier').textContent = `${seasonMultiplier >= 0 ? '+' : ''}${Math.round(seasonMultiplier * 100)}%`;
+            document.getElementById('total-price').textContent = Math.round(total);
+
+            return Math.round(total);
+        }
+
+        // Form validation function
+        function validateForm() {
+            validationErrors = {};
+            
+            // Required fields validation
+            const requiredFields = ['package-select', 'guests', 'checkin', 'checkout', 'name', 'email'];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                const value = field.value.trim();
+                
+                if (!value) {
+                    validationErrors[fieldId] = 'This field is required';
+                    field.classList.add('error');
+                } else {
+                    field.classList.remove('error');
+                }
+            });
+
+            // Email validation
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email && !emailRegex.test(email)) {
+                validationErrors['email'] = 'Please enter a valid email address';
+                document.getElementById('email').classList.add('error');
+            }
+
+            // Date validation
+            const checkin = new Date(document.getElementById('checkin').value);
+            const checkout = new Date(document.getElementById('checkout').value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (checkin < today) {
+                validationErrors['checkin'] = 'Check-in date cannot be in the past';
+                document.getElementById('checkin').classList.add('error');
+            }
+
+            if (checkout <= checkin) {
+                validationErrors['checkout'] = 'Check-out date must be after check-in date';
+                document.getElementById('checkout').classList.add('error');
+            }
+
+            // Update submit button state
+            const hasErrors = Object.keys(validationErrors).length > 0;
+            submitBtn.disabled = hasErrors || currentTotal <= 0;
+
+            return !hasErrors;
+        }
+
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Package selection change
+            packageSelect.addEventListener('change', function() {
+                const packageId = parseInt(this.value);
+                currentPackage = packages.find(pkg => pkg.id === packageId);
+                currentTotal = calculateBookingPrice();
+                validateForm();
+            });
+
+            // Form field changes for live validation and price calculation
+            const formFields = ['guests', 'checkin', 'checkout', 'promo-code', 'name', 'email'];
+            formFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                field.addEventListener('input', function() {
+                    currentTotal = calculateBookingPrice();
+                    validateForm();
+                });
+                field.addEventListener('change', function() {
+                    currentTotal = calculateBookingPrice();
+                    validateForm();
+                });
+            });
+
+            // Gallery layout toggle
+            document.querySelectorAll('.layout-toggle').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.layout-toggle').forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update gallery layout
+                    const layout = this.getAttribute('data-layout');
+                    galleryContainer.className = `gallery ${layout}`;
+                });
+            });
+
+            // Gallery modal functionality
+            galleryContainer.addEventListener('click', function(e) {
+                const galleryItem = e.target.closest('.gallery-item');
+                if (galleryItem) {
+                    const largeSrc = galleryItem.getAttribute('data-large');
+                    const title = galleryItem.getAttribute('data-title');
+                    const description = gall
